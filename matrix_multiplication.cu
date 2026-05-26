@@ -1,63 +1,4 @@
-# EXP-6---Matrix-multiplication-using-cuBLAS-in-CUDA-C-
 
----
-### Name : LAKSHMIDHAR N
-### Register Number : 212224230138
-### Exp No : 06
-### Date : 26.05.2026
-
----
-
-
-# Objective
-To implement matrix multiplication on the GPU using the cuBLAS library in CUDA C, and analyze the performance improvement over CPU-based matrix multiplication by leveraging GPU acceleration.
-
-# AIM:
-To utilize the cuBLAS library for performing matrix multiplication on NVIDIA GPUs, enhancing the performance of matrix operations by parallelizing computations and utilizing efficient GPU memory access.
-
-Code Overview
-In this experiment, you will work with the provided CUDA C code that performs matrix multiplication using the cuBLAS library. The code initializes two matrices (A and B) on the host, transfers them to the GPU device, and uses cuBLAS functions to compute the matrix product (C). The resulting matrix C is then transferred back to the host for verification and output.
-
-# EQUIPMENTS REQUIRED:
-Hardware:
-PC with NVIDIA GPU
-Google Colab with NVCC compiler
-Software:
-CUDA Toolkit (with cuBLAS library)
-NVCC (NVIDIA CUDA Compiler)
-Sample datasets for matrix multiplication (e.g., random matrices)
-
-# PROCEDURE:
-Tasks:
-Initialize Host Memory:
-
-Allocate memory for matrices A, B, and C on the host (CPU). Use random values for matrices A and B.
-Allocate Device Memory:
-
-Allocate corresponding memory on the GPU device for matrices A, B, and C using cudaMalloc().
-Transfer the host matrices A and B to the GPU device using cudaMemcpy().
-Matrix Multiplication using cuBLAS:
-
-Initialize the cuBLAS library using cublasCreate().
-Use the cublasSgemm() function to perform single-precision matrix multiplication on the GPU. This function computes the matrix product C = alpha * A * B + beta * C.
-Retrieve and Print Results:
-
-Copy the resulting matrix C from the device back to the host memory using cudaMemcpy().
-Print the matrices A, B, and C to verify the correctness of the multiplication.
-Clean Up Resources:
-
-Free the allocated host and device memory using free() and cudaFree().
-Shutdown the cuBLAS library using cublasDestroy().
-
-Performance Analysis:
-Measure the execution time of matrix multiplication using the cuBLAS library with different matrix sizes (e.g., 256x256, 512x512, 1024x1024).
-Experiment with varying block sizes (e.g., 16, 32, 64 threads per block) and analyze their effect on execution time.
-Compare the performance of the GPU-based matrix multiplication using cuBLAS with a standard CPU-based matrix multiplication implementation.
-
-# PROGRAM:
-
-```cpp
-cuda_code = """
 #include <stdlib.h>
 #include <stdio.h>
 #include <cublas_v2.h>
@@ -95,7 +36,7 @@ int main() {
 
     for (int s = 0; s < numSizes; s++) {
         int size = sizes[s];
-        printf("\\nRunning matrix multiplication for size: %d x %d\\n", size, size);
+        printf("\nRunning matrix multiplication for size: %d x %d\n", size, size);
 
         // Allocate host memory (aligned to 32-byte boundaries)
         float *A = (float*)aligned_alloc(32, size * size * sizeof(float));
@@ -112,7 +53,7 @@ int main() {
         cpuMatrixMultiplication(A, B, C_cpu, size);
         clock_t end_cpu = clock();
         double time_cpu = ((double)(end_cpu - start_cpu)) / CLOCKS_PER_SEC;
-        printf("CPU Matrix Multiplication Time: %f seconds\\n", time_cpu);
+        printf("CPU Matrix Multiplication Time: %f seconds\n", time_cpu);
 
         // Allocate device memory
 
@@ -159,7 +100,7 @@ int main() {
 
         float time_gpu;
         cudaEventElapsedTime(&time_gpu, start, stop);
-        printf("GPU Matrix Multiplication Time (cuBLAS): %f milliseconds\\n", time_gpu);
+        printf("GPU Matrix Multiplication Time (cuBLAS): %f milliseconds\n", time_gpu);
 
         // Copy result back to host
         cudaMemcpy(C_gpu, d_C, size * size * sizeof(float), cudaMemcpyDeviceToHost);
@@ -174,9 +115,9 @@ int main() {
             }
         }
         if (errors == 0) {
-            printf("Results verified successfully for size %d x %d\\n", size, size);
+            printf("Results verified successfully for size %d x %d\n", size, size);
         } else {
-            printf("Discrepancies found in the results for size %d x %d\\n", size, size);
+            printf("Discrepancies found in the results for size %d x %d\n", size, size);
         }
 
         // Clean up
@@ -192,18 +133,3 @@ int main() {
 
     return 0;
 }
-"""
-
-# Save the CUDA code to a file
-with open("matrix_multiplication.cu", "w") as file:
-    file.write(cuda_code)
-
-```
-
-# OUTPUT:
-
-![alt text](image.png)
-
-# RESULT:
-
-Thus, the matrix multiplication has been successfully implemented using the cuBLAS library in CUDA C, demonstrating the enhanced performance of GPU-based computation over CPU-based approaches.
